@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Title Page</title>
+
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" >
+	</head>
+	<body>
+		<div>
+			<h1>Text File Reader</h1>
+			<div>
+				Select a text file: 
+				<input type="file" id="fileInput">
+			</div>
+			<div class="container">
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						<h3 class="panel-title">Thông tin key</h3>
+					</div>
+					<div class="panel-body">
+						<ul id="fileDisplayArea"><ul>
+					</div>
+				</div>
+				
+			</div>
+			
+
+			</div>
+			<script>
+				window.onload = function() {
+					var fileInput = document.getElementById('fileInput');
+					var fileDisplayArea = document.getElementById('fileDisplayArea');
+
+					fileInput.addEventListener('change', function(e) {
+						var file = fileInput.files[0];
+						var textType = /text.*/;
+
+						if (file.type.match(textType)) {
+							var reader = new FileReader();
+
+							reader.onload = function(e) {
+								fileDisplayArea.innerHTML = "<li>" + reader.result + "</li>";
+							}
+
+							reader.readAsText(file);    
+						} else {
+							fileDisplayArea.innerText = "File not supported!"
+						}
+					});
+				}
+				window.open('test.txt')
+			</script>
+	</body>
+</html>
