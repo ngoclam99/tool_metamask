@@ -33,22 +33,50 @@ EndFunc
 
 ; Lấy bảng dữ liệu
 Func get( $table, $limit)
-   Local $array[$limit];
+   Local $array[$limit][2];
    ConnectDataBase("DB_Metamask.db");
    ; Lấy CSDL
    _SQLite_Query(-1, "SELECT * FROM " & $table &" WHERE status = 0 ORDER BY id LIMIT " & $limit, $hQuery)
    _SQLite_FetchNames($hQuery, $aNames)
    $i = 0;
    While _SQLite_FetchData($hQuery, $aRow, False, False) = $SQLITE_OK ; Read Out the next Row
-	  $array[$i] = $aRow[1]
+	  $array[$i][0] = $aRow[0]
+	  $array[$i][1] = $aRow[1]
 	  $i += 1;
 ;~ 	  ConsoleWrite($aRow[0]&@TAB&$aRow[1]& @CRLF)
    WEnd
 
    ; Hàm đóng kết nối CSDL
    CloseConnection($hQuery);
+;~    _ArrayDisplay($array);
    return $array;
 EndFunc
+
+; Lấy bảng dữ liệu
+Func get_key( $table, $array_size)
+   Local $array[$array_size][7];
+   ConnectDataBase("DB_Metamask.db");
+   ; Lấy CSDL
+   _SQLite_Query(-1, "SELECT * FROM " & $table &" WHERE status = 1 ORDER BY id", $hQuery)
+   _SQLite_FetchNames($hQuery, $aNames)
+   $i = 0;
+   While _SQLite_FetchData($hQuery, $aRow, False, False) = $SQLITE_OK ; Read Out the next Row
+	  $array[$i][0] = $aRow[0]
+	  $array[$i][1] = $aRow[1]
+	  $array[$i][2] = $aRow[2]
+	  $array[$i][3] = $aRow[3]
+	  $array[$i][4] = $aRow[4]
+	  $array[$i][5] = $aRow[5]
+	  $i += 1;
+;~ 	  ConsoleWrite($aRow[0]&@TAB&$aRow[1]& @CRLF)
+   WEnd
+
+   ; Hàm đóng kết nối CSDL
+   CloseConnection($hQuery);
+;~    _ArrayDisplay($array);
+   return $array;
+EndFunc
+
 
 ; Lấy xóa dữ liệu
 Func Delete( $table, $key, $column)
@@ -65,8 +93,8 @@ EndFunc
 
 ; Insert CSDL
 
-Func InsertHref($key, $date, $status)
-   $_ex = _SQLite_Exec(-1, "INSERT INTO tbl_key VALUES (NULL, "& _SQLite_Escape($key) &","& _SQLite_Escape($date)&","& _SQLite_Escape($status) &");")
+Func InsertKey($key, $date, $status)
+   $_ex = _SQLite_Exec(-1, "INSERT INTO tbl_key VALUES (NULL, "& _SQLite_Escape($key) &","& _SQLite_Escape($date)&","& _SQLite_Escape($status) &", 0, NULL);")
    $LastInsertID = 0;
    if $_ex = $SQLITE_OK then
 	  $LastInsertID = _SQLite_LastInsertRowID();
@@ -74,6 +102,20 @@ Func InsertHref($key, $date, $status)
 ;~ 	  ConsoleWrite("_SQLite_LastInsertRowID = "&$LastInsertID& @CRLF)
    EndIf
    Return $LastInsertID;
+EndFunc
+
+Func UpdateKey($status, $updatetime, $ghichu, $id)
+   ConnectDataBase("DB_Metamask.db");
+   $_ex = _SQLite_Exec(-1, "UPDATE tbl_key SET status = " & $status &", updatetime = " & _SQLite_Escape($updatetime) & ", ghichu = " & _SQLite_Escape($ghichu) & " WHERE id = " & $id & ";")
+   $LastInsertID = 0;
+   if $_ex = $SQLITE_OK then
+	  $status = 1;
+;~ 	  ConsoleWrite("UPDATE tbl_key SET status = " & $status &", updatetime = " & _SQLite_Escape($updatetime) & ", ghichu = " & _SQLite_Escape($ghichu) & " WHERE id = " & $id & ");" & @CRLF)
+   Else
+	  ConsoleWrite(@CRLF & "Update thất bại" & @CRLF)
+   EndIf
+   CloseConnection($hQuery);
+   Return $status;
 EndFunc
 
 ; Kiểm tra xem có tồn tại trong CSDL chưa

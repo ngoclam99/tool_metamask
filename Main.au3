@@ -11,6 +11,8 @@
 #include <Date.au3>
 ;~ Example()
 
+Main();
+
 Func Main()
    $file =  @scriptdir & "\key.txt"
    FileOpen($file, 0)
@@ -52,7 +54,7 @@ Func Main()
 	  ;~    Kiểm tra những trường hợp chưa có trong CSDL mới insert thôi
 		 IF $check == "" THEN
 			$date = _NowCalc();
-			$id = InsertHref($stringRandom, $date, 0)
+			$id = InsertKey($stringRandom, $date, 0)
 	  ;~ 	  Lưu file nếu muốn
 	  ;~ 	  SaveFile($stringRandom & @CRLF);
 			$i += 1;
@@ -66,7 +68,8 @@ Func Main()
 
 	  ; Close the progress window.
 	  ProgressOff()
-	  MsgBox(1, "Thông báo", "Kết thúc!!!");
+	  MsgBox(0, "Thông báo", "Kết thúc!!!");
+	  ConsoleWrite("Xong!!!");
    EndIf
 
 EndFunc

@@ -8,29 +8,34 @@
 #include <MsgBoxConstants.au3>
 #include <WinAPIFiles.au3>
 #include <Date.au3>
-#include "main_test.au3";
+#include "Main.au3"
 #include "wd_core.au3"
 #include "wd_helper.au3"
-#include "WinHttp.au3"
+#include "openChrome.au3"
 
 ;~ Kiểm tra xem có muốn thêm dữ liệu vào hệ thống không;
-;~ $t = MsgBox (4, "Thông báo" ,"Bạn có muốn thực hiện thêm key vào hệ thống không?")
-;~ If $t = 6 Then
-;~    Main();
-;~ EndIf
+$t = MsgBox (4, "Thông báo" ,"Bạn có muốn thực hiện thêm key vào hệ thống không?")
+If $t = 6 Then
+   Main();
+Else
+   Main_Tool();
+EndIf
 
 ;~ Lấy key từ cơ sở dữ liệu ra
 $getKey = get("tbl_key", 10);
-ProgressOn("Đang thực hiện lấy key từ hệ thống ra bên ngoài", "Increments every second", "0 key", -1, -1, BitOR($DLG_NOTONTOP, $DLG_MOVEABLE))
-$i = 1;
-For $row In $getKey
-   ConsoleWrite($row &@CRLF);
-   Sleep(1000)
-   ProgressSet($i, $i & " key")
-   $i += 1;
-Next
+;~ ProgressOn("Đang thực hiện lấy key từ hệ thống ra bên ngoài", "Increments every second", "0 key", -1, -1, BitOR($DLG_NOTONTOP, $DLG_MOVEABLE))
+;~ $i = 1;
 
-ProgressSet($i, "Done", "Complete")
+For $i = 0 To UBound($getKey)
+;~    ConsoleWrite($getKey[$i][0] &@CRLF);
+;~    ConsoleWrite($getKey[$i][1] &@CRLF);
+
+;~    Sleep(1000)
+;~    ProgressSet($i, $i & " key")
+;~    $i += 1;
+Next
+;~ UBound($getKey) - để lấy số dòng trong mảng
+;~ ProgressSet($i, "Done", "Complete")
 
 ;~ ToolTip("Trình duyệt Chrome", 0, 0)
 ;~ Sleep(2000) ; Sleep to give tooltip time to display
